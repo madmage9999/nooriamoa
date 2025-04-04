@@ -7,7 +7,7 @@ Simple web app with **FastAPI** with following features:
 - Real-time notification
 - Homepage using HTML + plain JS
 
----
+Deployed here: https://madmage9999.github.io/nooriamoa/
 
 ## Tech Stack
 
@@ -19,7 +19,7 @@ Simple web app with **FastAPI** with following features:
 - WebSockets
 - HTML + JS
 
----
+
 
 ## How to Set Up Locally
 

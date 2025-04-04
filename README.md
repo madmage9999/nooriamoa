@@ -9,6 +9,8 @@ Simple web app with **FastAPI** with following features:
 
 Deployed here: https://madmage9999.github.io/nooriamoa/
 
+DB hosted by Rails and backend hosted by Render. After the first request try again after 5-15 minutes as the backend server needs time to spin up after sleeping.
+
 ## Tech Stack
 
 - Python 3.11+

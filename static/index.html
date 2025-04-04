@@ -124,7 +124,7 @@
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
 
-      const res = await fetch('https://nooriamoa.onrender.com/register', {
+      const res = await fetch('https://localhost:8000/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -145,7 +145,7 @@
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
 
-      const res = await fetch('https://nooriamoa.onrender.com/login', {
+      const res = await fetch('https://localhost:8000/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -173,7 +173,7 @@
     }
 
     function initWebSocket() {
-      const ws = new WebSocket('ws://nooriamoa.onrender.com/ws');
+      const ws = new WebSocket('ws://localhost:8000/ws');
       const note = document.getElementById('notification');
       const userList = document.getElementById('userList');
 

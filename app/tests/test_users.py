@@ -19,13 +19,8 @@ async def test_user_login_success(client: AsyncClient, session):
         email=f"test_{uuid4()}@example.com",
         password=hash_password("secret123")
     )
-    print("adding test user")
     db.add(test_user)
     await db.commit()
-
-    # Print all database entries for debugging
-    users = await db.execute(text('SELECT * FROM users'))
-    print(users.fetchall())
 
     response = await client.post("/login", json={
         "email": test_user.email,

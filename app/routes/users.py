@@ -10,6 +10,16 @@ router = APIRouter()
 
 @router.post("/register", response_model=schemas.UserOut)
 async def register_user(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
+    """
+    Register a new user.
+    
+    Args:
+        user: User registration details
+        db: Database session
+        
+    Returns:
+        Newly created user
+    """
     existing_user = await get_user_by_email(db, email=user.email)
     if existing_user:
         raise HTTPException(
@@ -32,6 +42,16 @@ async def register_user(user: schemas.UserCreate, db: AsyncSession = Depends(get
 
 @router.post("/login", response_model=schemas.Token)
 async def login_user(user: schemas.UserLogin, db: AsyncSession = Depends(get_db)):
+    """
+    Authenticate user and generate access token.
+    
+    Args:
+        user: Login credentials
+        db: Database session
+        
+    Returns:
+        JWT access token
+    """
     db_user = await authenticate_user(db, email=user.email, password=user.password)
     if not db_user:
         raise HTTPException(
@@ -41,5 +61,3 @@ async def login_user(user: schemas.UserLogin, db: AsyncSession = Depends(get_db)
     access_token = create_access_token(data={"sub": db_user.email})
     return {"access_token": access_token, "token_type": "bearer"}
 
-
-    

@@ -11,6 +11,8 @@ if DATABASE_URL is None:
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 
+# Create session factory for async sessions
+# expire_on_commit=False prevents expired object errors after commit
 async_session = sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False
 )
@@ -18,6 +20,16 @@ async_session = sessionmaker(
 Base = declarative_base()
 
 async def get_db():
+    """
+    Dependency that yields database sessions.
+    
+    Usage:
+        @app.get("/")
+        async def root(db: AsyncSession = Depends(get_db)):
+            ...
+    
+    Yields:
+        AsyncSession: Database session that is automatically closed after use
+    """
     async with async_session() as session:
         yield session
-

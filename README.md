@@ -22,7 +22,6 @@ DB hosted by Rails and backend hosted by Render. After the first request try aga
 - HTML + JS
 
 
-
 ## How to Set Up Locally
 
 ### 1. Clone Repo
@@ -69,9 +68,6 @@ uvicorn app.main:app --reload
 
 Then open `static/index.html` from your preferred web browser to start viewing the app.
 
-
----
-
 # How to test
 
 1. Open two browser windows or tabs
@@ -83,3 +79,58 @@ Then open `static/index.html` from your preferred web browser to start viewing t
 4. Repeat with more browsers to see continuous updates of users registering
 
 You can inspect localStorage to view the saved JWT token.
+
+Unit tests can also be run with pytest
+
+
+# Technical Discussion
+
+## Technology Stack Decisions & Trade-offs
+
+### Backend Framework: FastAPI
+- **Pros:**
+  - High performance due to async support
+  - Built-in OpenAPI documentation
+  - Modern, Pythonic API design
+- **Trade-offs:**
+  - Smaller ecosystem compared to Django/Flask
+  - Less built-in functionality (auth, admin, etc)
+
+
+### Database: PostgreSQL with asyncpg
+- **Pros:**
+  - Good performance and reliability
+  - Scalable with larger dbs
+- **Trade-offs:**
+  - More complex setup than SQLite
+  - Requires separate database server
+  - Higher resource usage
+
+### Authentication: JWT
+- **Pros:**
+  - Stateless authentication
+  - Scalable across multiple servers
+  - Client-side storage
+- **Trade-offs:**
+  - Cannot invalidate individual tokens
+  - Token size adds overhead
+  - Need to handle token refresh
+
+### Real-time Updates: WebSockets
+- **Pros:**
+  - True bi-directional communication
+  - Lower latency than polling
+  - Native browser support
+- **Trade-offs:**
+  - Requires connection management
+  - Issues with scaling
+
+### Frontend: Plain HTML/JS
+- **Pros:**
+  - Simple to understand and maintain
+  - No build process needed
+  - Fast initial load
+- **Trade-offs:**
+  - Limited reusability
+  - No component architecture
+  - Manual state management

@@ -13,12 +13,19 @@
       padding: 20px;
       background-color: #f4f4f4;
       color: #333;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px; 
+      margin: 0 auto;
     }
 
     nav {
       margin-bottom: 20px;
       display: flex;
       gap: 10px;
+      justify-content: center;
     }
 
     button {
@@ -38,7 +45,7 @@
       display: flex;
       flex-direction: column;
       max-width: 300px;
-      margin-bottom: 10px;
+      margin: 0 auto 10px auto;
     }
 
     input {
@@ -62,11 +69,14 @@
       border-left: 5px solid #00bcd4;
       margin-bottom: 10px;
       border-radius: 4px;
+      white-space: pre-line;
     }
 
     ul {
       list-style-type: disc;
       padding-left: 20px;
+      text-align: left; 
+      display: inline-block; 
     }
 
     .hidden {
@@ -75,42 +85,47 @@
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav>
-    <button onclick="showSection('login')">Login</button>
-    <button onclick="showSection('register')">Register</button>
-    <button onclick="logout()">Logout</button>
-  </nav>
+  <div class="container">
+    <!-- Navigation -->
+    <nav>
+      <button onclick="showSection('login')">Login</button>
+      <button onclick="showSection('register')">Register</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
 
-  <!-- Register -->
-  <section id="registerSection" class="hidden">
-    <h2>Register</h2>
-    <form id="registerForm">
-      <input type="email" id="registerEmail" placeholder="Email" required />
-      <input type="password" id="registerPassword" placeholder="Password" required />
-      <button type="submit">Register</button>
-    </form>
-    <p id="registerMessage"></p>
-  </section>
+    <!-- Register -->
+    <section id="registerSection" class="hidden">
+      <h2>Register</h2>
+      <form id="registerForm">
+        <input type="email" id="registerEmail" placeholder="Email" required />
+        <input type="password" id="registerPassword" placeholder="Password" required />
+        <button type="submit">Register</button>
+      </form>
+      <p id="registerMessage"></p>
+    </section>
 
-  <!-- Login -->
-  <section id="loginSection" class="hidden">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <input type="email" id="loginEmail" placeholder="Email" required />
-      <input type="password" id="loginPassword" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-    <p id="loginMessage"></p>
-  </section>
+    <!-- Login -->
+    <section id="loginSection" class="hidden">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+      <p id="loginMessage"></p>
+    </section>
 
-  <!-- Welcome -->
-  <section id="welcomeSection" class="hidden">
-    <h2>Welcome!</h2>
-    <p id="notification">Connecting to notification service...</p>
-    <h3>New Users:</h3>
-    <ul id="userList"></ul>
-  </section>
+    <!-- Welcome -->
+    <section id="welcomeSection" class="hidden">
+      <h2>Welcome!</h2>
+      <!-- Show the logged-in user's email -->
+      <p id="loggedInEmail"></p>
+
+      <p id="notification">Connecting to notification service...</p>
+      <h3>New Users:</h3>
+      <ul id="userList"></ul>
+    </section>
+  </div>
 
   <script>
     function showSection(section) {
@@ -156,6 +171,9 @@
         const data = await res.json();
         localStorage.setItem('access_token', data.access_token);
         msg.textContent = 'Login successful!';
+        // Display user’s email in the welcome section
+        document.getElementById('loggedInEmail').textContent = `Logged in as: ${email}`;
+
         setTimeout(() => {
           showSection('welcome');
           initWebSocket();
@@ -169,6 +187,7 @@
     function logout() {
       localStorage.removeItem('access_token');
       document.getElementById('userList').innerHTML = '';
+      document.getElementById('loggedInEmail').textContent = '';
       showSection('login');
     }
 
@@ -177,21 +196,16 @@
       const note = document.getElementById('notification');
       const userList = document.getElementById('userList');
 
-      ws.onmessage = (event) => {
-        const message = event.data;
-        note.textContent = message;
-
-        const match = message.match(/New user registered: (.+)/);
-        if (match && match[1]) {
-          const email = match[1];
-          const li = document.createElement('li');
-          li.textContent = email;
-          userList.appendChild(li);
-        }
-      };
-
       ws.onopen = () => {
         note.textContent = "Connected to notifications.";
+      };
+
+      ws.onmessage = (event) => {
+        const message = event.data;
+        const li = document.createElement('li');
+        li.textContent = message;
+        userList.appendChild(li);
+        
       };
 
       ws.onerror = () => {
